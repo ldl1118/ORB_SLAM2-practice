@@ -1,24 +1,3 @@
-/**
-* This file is part of ORB-SLAM2.
-*
-* Copyright (C) 2014-2016 Raúl Mur-Artal <raulmur at unizar dot es> (University of Zaragoza)
-* For more information see <https://github.com/raulmur/ORB_SLAM2>
-*
-* ORB-SLAM2 is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* ORB-SLAM2 is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with ORB-SLAM2. If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
 #ifndef VIEWER_H
 #define VIEWER_H
 
@@ -27,65 +6,51 @@
 #include "Tracking.h"
 #include "System.h"
 
-#include <mutex>
-
+// 包含不可重入的互斥锁，主要是为了使对共享资源的互斥使用，即同时只能有一个线程使用，以防止同时使用可能造成的数据问题。
+#include <mutex> 
 namespace ORB_SLAM2
 {
+    class Tracking;
+    class FrameDrawer;
+    class MapDrawer;
+    class System;
 
-class Tracking;
-class FrameDrawer;
-class MapDrawer;
-class System;
+    class Viewer;
+    {
+    public:
+        Viewer(System* pSystem, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Tracking* pTracking, const string &strSettingPath);
 
-class Viewer
-{
-public:
-    Viewer(System* pSystem, FrameDrawer* pFrameDrawer, MapDrawer* pMapDrawer, Tracking *pTracking, const string &strSettingPath);
+        // 主线程的函数。功能：描点，记录关键帧，当前相机位姿和上一帧处理的图像。
+        void Run();
 
-    // Main thread function. Draw points, keyframes, the current camera pose and the last processed
-    // frame. Drawing is refreshed according to the camera fps. We use Pangolin.
-    void Run();
+        void RequestFinish();
+        void RequestStop();
+        bool isFinished();
+        bool isStopped();
+        void Release();
 
-    void RequestFinish();
+    private:
+        bool Stop();
+        System* mpSystem;
+        FrameDrawer* mpFrameDrawer;
+        MapDrawer* mpMapDrawer;
+        Tracking* mpTracker;
 
-    void RequestStop();
+        // 1/fps in ms
+        double mT;
+        float mImageWidth, mImageHeight;
+        float mViewpointX, mViewpointY, mViewpointZ, mViewpointF;
 
-    bool isFinished();
+        bool CheckFinish();
+        void SetFinish();
+        bool mbFinishRequested;
+        bool mbFinished;
+        std::mutex mMutexFinish;
 
-    bool isStopped();
+        bool mbStopped;
+        bool mbStopRequested;
+        std::mutex mMutexStop;
+    };
+} // namespace ORB_SLAM2
 
-    void Release();
-
-private:
-
-    bool Stop();
-
-    System* mpSystem;
-    FrameDrawer* mpFrameDrawer;
-    MapDrawer* mpMapDrawer;
-    Tracking* mpTracker;
-
-    // 1/fps in ms
-    double mT;
-    float mImageWidth, mImageHeight;
-
-    float mViewpointX, mViewpointY, mViewpointZ, mViewpointF;
-
-    bool CheckFinish();
-    void SetFinish();
-    bool mbFinishRequested;
-    bool mbFinished;
-    std::mutex mMutexFinish;
-
-    bool mbStopped;
-    bool mbStopRequested;
-    std::mutex mMutexStop;
-
-};
-
-}
-
-
-#endif // VIEWER_H
-	
-
+# endif // VIEWER_H
