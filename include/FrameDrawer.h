@@ -10,44 +10,39 @@
 
 #include<mutex>
 
-
 namespace ORB_SLAM2
 {
+    class Tracking;
+    class Viewer;
+    class FrameDrawer
+    {
+    public:
+        FrameDrawer(Map* pMap);
 
-class Tracking;
-class Viewer;
+        // Update info from the last processed frame.
+        void Update(Tracking *pTracker);
 
-class FrameDrawer
-{
-public:
-    FrameDrawer(Map* pMap);
+        // 绘制上个处理过的帧
+        cv::Mat DrawFrame();
 
-    // Update info from the last processed frame.
-    void Update(Tracking *pTracker);
+    protected:
+        void DrawTextInfo(cv::Mat &im, int nState, cvc::Mat &imText);
 
-    // Draw last processed frame.
-    cv::Mat DrawFrame();
+        // 即将要绘制的帧的信息
+        cv::Mat mIm;
+        int N;
+        vector<cv::KeyPoint> mvCurrentKeys;
+        vector<bool> mbvMap, mvbVO;
+        bool mbOnlyTracking;
+        int mnTracked, mnTrackedVO;
+        vector<cv::KeyPoint> mnIniKeys;
+        vector<int> mvIniMatches;
+        int mState;
 
-protected:
+        Map* mpMap;
 
-    void DrawTextInfo(cv::Mat &im, int nState, cv::Mat &imText);
-
-    // Info of the frame to be drawn
-    cv::Mat mIm;
-    int N;
-    vector<cv::KeyPoint> mvCurrentKeys;
-    vector<bool> mvbMap, mvbVO;
-    bool mbOnlyTracking;
-    int mnTracked, mnTrackedVO;
-    vector<cv::KeyPoint> mvIniKeys;
-    vector<int> mvIniMatches;
-    int mState;
-
-    Map* mpMap;
-
-    std::mutex mMutex;
-};
-
-} //namespace ORB_SLAM
+        std::mutex mMutex;
+    };
+} // namespace ORB_SLAM2
 
 #endif // FRAMEDRAWER_H

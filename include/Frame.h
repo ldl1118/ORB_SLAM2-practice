@@ -153,7 +153,7 @@ namespace ORB_SLAM2
         // FRAME_GRID_COLS 64
         std::vector<std::size_t> mGrid[FRAME_GRID_COLS][FRAME_GRID_ROWS];
 
-        // 相机位姿 世界坐标系到相机坐标系的变换矩阵  ？？？？？？？？？？？？？？？？？？
+        // 相机位姿 世界坐标系到相机坐标系的变换矩阵
         cv::Mat mTcw;
 
         static long unsigned int nNextId; // 下一帧的ID
