@@ -197,5 +197,3 @@ namespace ORB_SLAM2
 } // namespace ORB_SLAM2
 
 #endif // FRAME_H
-
-
