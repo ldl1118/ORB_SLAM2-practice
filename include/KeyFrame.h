@@ -9,7 +9,7 @@
 #include "Frame.h"
 #include "KeyFrameDatabase.h"
 
-#include <mutex>
+#include <mutex> // 加互斥锁
 
 namespace ORB_SLAM2
 {
