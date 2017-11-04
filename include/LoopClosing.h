@@ -77,7 +77,7 @@ protected:
 
     bool CheckFinish();
     void SetFinish();
-    bool muFinishRequested;
+    bool mbFinishRequested;
     bool mbFinished;
     std::mutex mMutexFinish;
 
@@ -85,7 +85,7 @@ protected:
     Tracking* mpTracker;
 
     KeyFrameDatabase* mpKeyFrameDB;
-    ORBVocabulary* mpORBvocabulary;
+    ORBVocabulary* mpORBVocabulary;
 
     LocalMapping* mpLocalMapper;
 
@@ -99,7 +99,7 @@ protected:
     KeyFrame* mpMatchedKF;
     std::vector<ConsistentGroup> mvConsistentGroups;
     std::vector<KeyFrame*> mvpEnoughConsistentCandidates;
-    std::vector<KeyFrame*> mvpCurrentCOnnectedKFs;
+    std::vector<KeyFrame*> mvpCurrentConnectedKFs;
     std::vector<MapPoint*> mvpCurrentMatchedPoints;
     std::vector<MapPoint*> mvpLoopMapPoints;
     cv::Mat mScw;
