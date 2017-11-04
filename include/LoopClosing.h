@@ -41,7 +41,7 @@ public:
 
     void RequestReset();
 
-    // 该函数将会
+    // 该函数将会在一个单独的线程上运行
     void RunGLobalBundleAdjustment(unsigned long nLoopKF);
 
     bool isRunningGBA()
