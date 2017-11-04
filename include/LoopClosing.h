@@ -20,52 +20,49 @@ class Tracking;
 class LocalMapping;
 class KeyFrameDatabase;
 
-
 class LoopClosing
 {
 public:
-
-    typedef pair<set<KeyFrame*>,int> ConsistentGroup;    
-    typedef map<KeyFrame*,g2o::Sim3,std::less<KeyFrame*>,
+    typedef pair<set<KeyFrame*>,int> ConsistentGroup;
+    typedef map<KeyFrame*, g2o::Sim3, std::less<KeyFrame*>,
         Eigen::aligned_allocator<std::pair<const KeyFrame*, g2o::Sim3> > > KeyFrameAndPose;
 
 public:
-
-    LoopClosing(Map* pMap, KeyFrameDatabase* pDB, ORBVocabulary* pVoc,const bool bFixScale);
+    LoopClosing(Map* pMap, KeyFrameDatabase* pDB, ORBVocabulalry* pVoc, const bool bFixScale);
 
     void SetTracker(Tracking* pTracker);
 
     void SetLocalMapper(LocalMapping* pLocalMapper);
 
-    // Main function
+    // 主要的函数
     void Run();
 
     void InsertKeyFrame(KeyFrame *pKF);
 
     void RequestReset();
 
-    // This function will run in a separate thread
-    void RunGlobalBundleAdjustment(unsigned long nLoopKF);
+    // 该函数将会
+    void RunGLobalBundleAdjustment(unsigned long nLoopKF);
 
-    bool isRunningGBA(){
+    bool isRunningGBA()
+    {
         unique_lock<std::mutex> lock(mMutexGBA);
         return mbRunningGBA;
     }
-    bool isFinishedGBA(){
+    bool isFinishedGBA()
+    {
         unique_lock<std::mutex> lock(mMutexGBA);
         return mbFinishedGBA;
-    }   
+    }
 
     void RequestFinish();
-
     bool isFinished();
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 protected:
-
     bool CheckNewKeyFrames();
-
+    
     bool DetectLoop();
 
     bool ComputeSim3();
@@ -80,7 +77,7 @@ protected:
 
     bool CheckFinish();
     void SetFinish();
-    bool mbFinishRequested;
+    bool muFinishRequested;
     bool mbFinished;
     std::mutex mMutexFinish;
 
@@ -88,23 +85,21 @@ protected:
     Tracking* mpTracker;
 
     KeyFrameDatabase* mpKeyFrameDB;
-    ORBVocabulary* mpORBVocabulary;
+    ORBVocabulary* mpORBvocabulary;
 
-    LocalMapping *mpLocalMapper;
+    LocalMapping* mpLocalMapper;
 
     std::list<KeyFrame*> mlpLoopKeyFrameQueue;
 
     std::mutex mMutexLoopQueue;
 
-    // Loop detector parameters
+    // 回环检测的参数和变量
     float mnCovisibilityConsistencyTh;
-
-    // Loop detector variables
     KeyFrame* mpCurrentKF;
     KeyFrame* mpMatchedKF;
     std::vector<ConsistentGroup> mvConsistentGroups;
     std::vector<KeyFrame*> mvpEnoughConsistentCandidates;
-    std::vector<KeyFrame*> mvpCurrentConnectedKFs;
+    std::vector<KeyFrame*> mvpCurrentCOnnectedKFs;
     std::vector<MapPoint*> mvpCurrentMatchedPoints;
     std::vector<MapPoint*> mvpLoopMapPoints;
     cv::Mat mScw;
@@ -112,7 +107,7 @@ protected:
 
     long unsigned int mLastLoopKFid;
 
-    // Variables related to Global Bundle Adjustment
+    // 与全局BA有关的变量
     bool mbRunningGBA;
     bool mbFinishedGBA;
     bool mbStopGBA;
@@ -122,10 +117,9 @@ protected:
     // Fix scale in the stereo/RGB-D case
     bool mbFixScale;
 
-
     bool mnFullBAIdx;
 };
 
-} //namespace ORB_SLAM
+} // namespace ORB_SLAM2
 
 #endif // LOOPCLOSING_H
