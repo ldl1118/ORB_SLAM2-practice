@@ -9,7 +9,6 @@
 
 #include <mutex>
 
-
 namespace ORB_SLAM2
 {
 
@@ -26,12 +25,12 @@ public:
 
     void SetTracker(Tracking* pTracker);
 
-    // Main function
+    // 主要的函数
     void Run();
 
     void InsertKeyFrame(KeyFrame* pKF);
 
-    // Thread Synch
+    // 使各线程同步(synch)
     void RequestStop();
     void RequestReset();
     bool Stop();
@@ -42,18 +41,19 @@ public:
     void SetAcceptKeyFrames(bool flag);
     bool SetNotStop(bool flag);
 
+    // 中断Bundle Adjustment
     void InterruptBA();
 
     void RequestFinish();
     bool isFinished();
 
-    int KeyframesInQueue(){
+    int KeyframesInQueue()
+    {
         unique_lock<std::mutex> lock(mMutexNewKFs);
         return mlNewKeyFrames.size();
     }
 
 protected:
-
     bool CheckNewKeyFrames();
     void ProcessNewKeyFrame();
     void CreateNewMapPoints();
@@ -84,7 +84,8 @@ protected:
     LoopClosing* mpLoopCloser;
     Tracking* mpTracker;
 
-    std::list<KeyFrame*> mlNewKeyFrames;
+    // Tracking线程向Local Mapping中插入关键帧时，是先插入到该队列中
+    std::list<KeyFrame*> mlNewKeyFrames; // 等待处理的关键帧列表
 
     KeyFrame* mpCurrentKeyFrame;
 
@@ -103,6 +104,6 @@ protected:
     std::mutex mMutexAccept;
 };
 
-} //namespace ORB_SLAM
+} // namespace ORB_SLAM2
 
-#endif // LOCALMAPPING_H
+# endif // LOCALMAPPING_H
