@@ -52,6 +52,7 @@ protected:
     
     // Index related to a big change in the map (loop closure, global BA)
     int mnBigChangeIdx;
+    
     std::mutex mMutexMap;
 };
 
