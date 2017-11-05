@@ -26,7 +26,6 @@ public:
     void GetCurrentOpenGLCameraMatrix(pangolin::OpenGlMatrix &M);
 
 private:
-
     float mKeyFrameSize;
     float mKeyFrameLineWidth;
     float mGraphLineWidth;
@@ -39,6 +38,6 @@ private:
     std::mutex mMutexCamera;
 };
 
-} //namespace ORB_SLAM
+} //namespace ORB_SLAM2
 
 #endif // MAPDRAWER_H
