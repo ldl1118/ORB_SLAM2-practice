@@ -172,6 +172,6 @@ class PnPsolver {
 
 };
 
-} //namespace ORB_SLAM
+} //namespace ORB_SLAM2
 
 #endif //PNPSOLVER_H

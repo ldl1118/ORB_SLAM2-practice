@@ -6,8 +6,6 @@
 
 #include "KeyFrame.h"
 
-
-
 namespace ORB_SLAM2
 {
 
@@ -107,6 +105,6 @@ protected:
 
 };
 
-} //namespace ORB_SLAM
+} //namespace ORB_SLAM2
 
 #endif // SIM3SOLVER_H
