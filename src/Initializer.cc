@@ -683,7 +683,7 @@ bool Initializer::ReconstructH(vector<bool> &vbMatchesInliers, cv::Mat &H21, cv:
     // Motion and structure from motion in a piecewise planar environment.
     // International Journal of Pattern Recognition and Artificial Intelligence, 1988
 
-    // 因为特征点是图像坐标系，所以讲H矩阵由相机坐标系换算到图像坐标系
+    // 因为特征点是图像坐标系，所以将H矩阵由相机坐标系换算到图像坐标系
     cv::Mat invK = K.inv();
     cv::Mat A = invK*H21*K;
 
@@ -699,9 +699,7 @@ bool Initializer::ReconstructH(vector<bool> &vbMatchesInliers, cv::Mat &H21, cv:
 
     // SVD分解的正常情况是特征值降序排列
     if(d1/d2<1.00001 || d2/d3<1.00001)
-    {
         return false;
-    }
 
     vector<cv::Mat> vR, vt, vn;
     vR.reserve(8);
@@ -756,7 +754,7 @@ bool Initializer::ReconstructH(vector<bool> &vbMatchesInliers, cv::Mat &H21, cv:
         tp*=d1-d3;
 
         // 这里虽然对t有归一化，并没有决定单目整个SLAM过程的尺度
-        // 因为CreateInitialMapMonocular函数对3D点深度会缩放，然后反过来对 t 有改变
+        // 因为CreateInitialMapMonocular函数会对3D点的深度进行缩放，反过来会改变t
         cv::Mat t = U*tp;
         vt.push_back(t/cv::norm(t));
 
@@ -840,15 +838,13 @@ bool Initializer::ReconstructH(vector<bool> &vbMatchesInliers, cv::Mat &H21, cv:
             bestTriangulated = vbTriangulatedi;
         }
         else if(nGood>secondBestGood)
-        {
             secondBestGood = nGood;
-        }
     }
 
 
     if(secondBestGood<0.75*bestGood && bestParallax>=minParallax && bestGood>minTriangulated && bestGood>0.9*N)
     {
-        vR[bestSolutionIdx].copyTo(R21);
+        vR[bestSolutionIdx].copyTo(R21); // 将最优解copy给R21和t21,并返回输出
         vt[bestSolutionIdx].copyTo(t21);
         vP3D = bestP3D;
         vbTriangulated = bestTriangulated;
