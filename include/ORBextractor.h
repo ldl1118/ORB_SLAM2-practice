@@ -5,7 +5,6 @@
 #include <list>
 #include <opencv/cv.h>
 
-
 namespace ORB_SLAM2
 {
 
@@ -40,25 +39,33 @@ public:
       std::vector<cv::KeyPoint>& keypoints,
       cv::OutputArray descriptors);
 
-    int inline GetLevels(){
-        return nlevels;}
+    int inline GetLevels()
+    {
+        return nlevels;
+    }
 
-    float inline GetScaleFactor(){
-        return scaleFactor;}
+    float inline GetScaleFactor()
+    {
+        return scaleFactor;
+    }
 
-    std::vector<float> inline GetScaleFactors(){
+    std::vector<float> inline GetScaleFactors()
+    {
         return mvScaleFactor;
     }
 
-    std::vector<float> inline GetInverseScaleFactors(){
+    std::vector<float> inline GetInverseScaleFactors()
+    {
         return mvInvScaleFactor;
     }
 
-    std::vector<float> inline GetScaleSigmaSquares(){
+    std::vector<float> inline GetScaleSigmaSquares()
+    {
         return mvLevelSigma2;
     }
 
-    std::vector<float> inline GetInverseScaleSigmaSquares(){
+    std::vector<float> inline GetInverseScaleSigmaSquares()
+    {
         return mvInvLevelSigma2;
     }
 
@@ -90,7 +97,7 @@ protected:
     std::vector<float> mvInvLevelSigma2;
 };
 
-} //namespace ORB_SLAM
+} //namespace ORB_SLAM2
 
 #endif
 

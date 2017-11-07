@@ -9,7 +9,6 @@
 #include"KeyFrame.h"
 #include"Frame.h"
 
-
 namespace ORB_SLAM2
 {
 
@@ -19,23 +18,40 @@ public:
 
     ORBmatcher(float nnratio=0.6, bool checkOri=true);
 
-    // Computes the Hamming distance between two ORB descriptors
+    // 计算两个ORB描绘子之间的汉明距离
     static int DescriptorDistance(const cv::Mat &a, const cv::Mat &b);
 
-    // Search matches between Frame keypoints and projected MapPoints. Returns number of matches
-    // Used to track the local map (Tracking)
+    // 寻找frame中的特征点与投影的MapPoint之间的匹配，返回match的数量。
+    // 通过投影，对Loccal MapPoint进行跟踪。        用于tracking线程的track local map
+    //
+    // 将Local MapPoint投影到当前帧，由此增加当前帧的MapPoints
+    // 在SearchLocalPoints()中已经将Local MapPoints重投影(isInFrustum)到当前帧，并标记这些点是否在当前帧的视野中，即mbTrackInView
+    //
+    // 对于这些MapPoints，在其投影点附近根据描述子的距离选取匹配，并通过最终的方向投票机制剔除
+    // 参数：
+    // F                当前帧
+    // vpMapPoints      Local MapPoints
+    // th               阈值
+    // return           成功匹配的数量
+    // 参见 SearchLocalPoints()  isInFrustum()
     int SearchByProjection(Frame &F, const std::vector<MapPoint*> &vpMapPoints, const float th=3);
 
-    // Project MapPoints tracked in last frame into the current frame and search matches.
-    // Used to track from previous frame (Tracking)
+    // 通过投影，对上一帧的特征点进行跟踪。    用于Tracking中的 track from previous frame
+    // 1. 将上一帧的MapPoints投影到当前帧（根据速度模型可以估计当前帧的Tcw）
+    // 2. 在投影点附近，根据描述子距离选取匹配，并通过最终的方向投票机制剔除
+    // 参数：
+    // CurrentFrame     当前帧
+    // LastFrame        上一帧
+    // th               阈值
+    // bMono            是否为单目
+    // return           成功匹配的数量
+    // 参见 SearchByBoW()
     int SearchByProjection(Frame &CurrentFrame, const Frame &LastFrame, const float th, const bool bMono);
 
-    // Project MapPoints seen in KeyFrame into the Frame and search matches.
-    // Used in relocalisation (Tracking)
+    // 将关键帧的MapPoints投影到当前帧，并寻求匹配。  用于Tracking中的relocalisation
     int SearchByProjection(Frame &CurrentFrame, KeyFrame* pKF, const std::set<MapPoint*> &sAlreadyFound, const float th, const int ORBdist);
 
-    // Project MapPoints using a Similarity Transformation and search matches.
-    // Used in loop detection (Loop Closing)
+    // 用相似变换投影MapPoints，并寻求匹配。     用于Loop Closing中的回环检测
      int SearchByProjection(KeyFrame* pKF, cv::Mat Scw, const std::vector<MapPoint*> &vpPoints, std::vector<MapPoint*> &vpMatched, int th);
 
     // Search matches between MapPoints in a KeyFrame and ORB in a Frame.
@@ -44,10 +60,10 @@ public:
     int SearchByBoW(KeyFrame *pKF, Frame &F, std::vector<MapPoint*> &vpMapPointMatches);
     int SearchByBoW(KeyFrame *pKF1, KeyFrame* pKF2, std::vector<MapPoint*> &vpMatches12);
 
-    // Matching for the Map Initialization (only used in the monocular case)
+    // 地图初始化时的mathcing，仅用于单目
     int SearchForInitialization(Frame &F1, Frame &F2, std::vector<cv::Point2f> &vbPrevMatched, std::vector<int> &vnMatches12, int windowSize=10);
 
-    // Matching to triangulate new MapPoints. Check Epipolar Constraint.
+    // Matching，用于三角化新的MapPoints，并检验Epipolar约束。
     int SearchForTriangulation(KeyFrame *pKF1, KeyFrame* pKF2, cv::Mat F12,
                                std::vector<pair<size_t, size_t> > &vMatchedPairs, const bool bOnlyStereo);
 
@@ -67,7 +83,6 @@ public:
     static const int TH_HIGH;
     static const int HISTO_LENGTH;
 
-
 protected:
 
     bool CheckDistEpipolarLine(const cv::KeyPoint &kp1, const cv::KeyPoint &kp2, const cv::Mat &F12, const KeyFrame *pKF);
@@ -80,6 +95,6 @@ protected:
     bool mbCheckOrientation;
 };
 
-}// namespace ORB_SLAM
+}// namespace ORB_SLAM2
 
 #endif // ORBMATCHER_H

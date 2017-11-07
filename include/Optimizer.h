@@ -37,6 +37,6 @@ public:
                             g2o::Sim3 &g2oS12, const float th2, const bool bFixScale);
 };
 
-} //namespace ORB_SLAM
+} //namespace ORB_SLAM2
 
 #endif // OPTIMIZER_H
