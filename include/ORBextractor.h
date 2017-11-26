@@ -100,4 +100,3 @@ protected:
 } //namespace ORB_SLAM2
 
 #endif
-
