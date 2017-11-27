@@ -7,13 +7,9 @@
 namespace ORB_SLAM2
 {
 
-// 单目SLAM会用到这个初始化，双目和RGB-D不会使用这个类
 class Initializer
 {
     typedef pair<int,int> Match;
-    // pair是一种模板类型，每个pair可以储存两个值，也可以将自己写的struct对象放进去。
-    // 应用：如果需要一个函数有两个返回值，若返回的是相同类型，则可以用数组;如果是不同类型，可以自己写个struct。但是为了方便，就可以使用
-    // c++自带的pair。另外，在一个对象有多个属性的时候，也可以用pair操作。
 
 public:
     // 用reference frame初始化。这个reference frame就是SLAM正式开始的第一帧

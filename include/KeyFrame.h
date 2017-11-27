@@ -34,7 +34,7 @@ public:
     cv::Mat GetRotation();
     cv::Mat GetTranslation();
 
-    // 计算Bag of Words的表达方式
+
     void ComputeBoW();
 
     // Covisibility graph 的相关函数
